@@ -1,19 +1,28 @@
-version: "3"
-
 volumes:
-  database:
+  db:
+    driver: local
+  redis_data:
     driver: local
 
 services:
   db:
     platform: linux/amd64
-    image: postgres:15 # Use a specific version of Postgres
+    image: postgres:16
     restart: always
     environment:
-      - POSTGRES_USER=sebi
-      - POSTGRES_PASSWORD=sebi_test_4444
-      - POSTGRES_DB=turborepo
+      - POSTGRES_USER=hameed
+      - POSTGRES_PASSWORD=Asmath2001
+      - POSTGRES_DB=perp
     ports:
-      - '5432:5432' # Expose the Postgres port to your local machine
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
