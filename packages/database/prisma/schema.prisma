@@ -7,12 +7,198 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  output = "../generated/client"
+  output   = "../generated/client"
+}
+
+enum OrderSide {
+  buy
+  sell
+}
+
+enum OrderType {
+  market
+  limit
+}
+
+enum OrderStatus {
+  open
+  fulfilled
+  cancelled
+  partiallyFilled
+  rejected
+}
+
+enum PositionStatus {
+  open
+  closed
+  liquidated
+}
+
+enum FillRole {
+  maker
+  taker
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  wallet          Wallet?
+  orders          Order[]
+  fills           Fill[]
+  positions       Position[]
+  fundingPayments FundingPayment[]
+}
+
+model Wallet {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  balance        BigInt   @default(0)
+  lockedMargin   BigInt   @default(0)
+  totalDeposited BigInt   @default(0) // lifetime
+  totalWithdrawn BigInt   @default(0) // lifetime
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Market {
+  id            String  @id @default(uuid())
+  slug          String  @unique
+  baseCurrency  String
+  quoteCurrency String
+  imageUrl      String?
+
+  tickSize              BigInt
+  minOrderSize          BigInt // min order quantity
+  maxOrderSize          BigInt // max order quantity
+  maxLeverage           Int
+  makerFeeRate          BigInt
+  takerFeeRate          BigInt
+  maintenanceMarginRate Int // minimum balance to maintain otherwise it get's liquidated like 0.5%
+  initialMarginRate     Int // minimum balance to open an order like 1%
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+
+  orders          Order[]
+  fills           Fill[]
+  positions       Position[]
+  fundingRates    FundingRate[]
+  fundingPayments FundingPayment[]
+}
+
+model Order {
+  id       String      @id @default(uuid())
+  userId   String
+  marketId String
+  side     OrderSide
+  type     OrderType
+  status   OrderStatus
+
+  qty          BigInt
+  price        BigInt?
+  filledQty    BigInt  @default(0)
+  remainingQty BigInt
+
+  leverage  Int      @default(1)
+  slippage  Int // max allowed slippage for market orders
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  market Market @relation(fields: [marketId], references: [id])
+  fills  Fill[]
+
+  @@index([userId])
+}
+
+model Fill {
+  id        String    @id @default(uuid())
+  orderId   String
+  userId    String
+  marketId  String
+  side      OrderSide
+  role      FillRole // maker or taker
+  quantity  BigInt
+  price     BigInt
+  fee       BigInt
+  createdAt DateTime  @default(now())
+
+  order  Order  @relation(fields: [orderId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  market Market @relation(fields: [marketId], references: [id])
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([marketId])
+}
+
+model Position {
+  id               String         @id @default(uuid())
+  userId           String
+  marketId         String
+  side             OrderSide
+  status           PositionStatus @default(open)
+  size             BigInt // current position size
+  entryPrice       BigInt // average
+  liquidationPrice BigInt
+  margin           BigInt
+  unrealizedPnL    BigInt
+  realizedPnL      BigInt
+  openedAt         DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id])
+  market      Market       @relation(fields: [marketId], references: [id])
+  liquidation Liquidation?
+
+  @@unique([userId, marketId, side, status]) // only one open position per market
+  @@index([userId])
+}
+
+model Liquidation {
+  id           String   @id @default(uuid())
+  positionId   String   @unique
+  sizeAtLiq    BigInt // size at the time of liquidation
+  priceAtLiq   BigInt // price that trigered liquidation
+  marginLost   BigInt
+  liquidatedAt DateTime @default(now())
+
+  position Position @relation(fields: [positionId], references: [id])
+}
+
+model FundingRate {
+  id         String   @id @default(uuid())
+  marketId   String
+  rate       BigInt // funding rate can be negative
+  markPrice  BigInt // current price in the exchange
+  indexPrice BigInt // original price of an asset from binance mostly
+  timestamp  DateTime @default(now())
+
+  market          Market           @relation(fields: [marketId], references: [id])
+  fundingPayments FundingPayment[]
+
+  @@index([marketId])
+}
+
+model FundingPayment {
+  id            String   @id @default(uuid())
+  userId        String
+  marketId      String
+  fundingRateId String
+  amount        BigInt // positive = paid, negative = received
+  positionSize  BigInt // size of position at payment time
+  paidAt        DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  market      Market      @relation(fields: [marketId], references: [id])
+  fundingRate FundingRate @relation(fields: [fundingRateId], references: [id])
+
+  @@index([userId])
+  @@index([marketId])
+  @@index([fundingRateId])
 }
