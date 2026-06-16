@@ -9,8 +9,8 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
-  for (var name2 in all)
-    __defProp(target, name2, { get: all[name2], enumerable: true });
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -29,101 +29,6 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
-
-// ../../node_modules/.bun/postgres-array@3.0.4/node_modules/postgres-array/index.js
-var require_postgres_array = __commonJS({
-  "../../node_modules/.bun/postgres-array@3.0.4/node_modules/postgres-array/index.js"(exports2) {
-    "use strict";
-    var BACKSLASH = "\\";
-    var DQUOT = '"';
-    var LBRACE = "{";
-    var RBRACE = "}";
-    var LBRACKET = "[";
-    var EQUALS = "=";
-    var COMMA = ",";
-    var NULL_STRING = "NULL";
-    function makeParseArrayWithTransform(transform) {
-      const haveTransform = transform != null;
-      return function parseArray3(str) {
-        const rbraceIndex = str.length - 1;
-        if (rbraceIndex === 1) {
-          return [];
-        }
-        if (str[rbraceIndex] !== RBRACE) {
-          throw new Error("Invalid array text - must end with }");
-        }
-        let position = 0;
-        if (str[position] === LBRACKET) {
-          position = str.indexOf(EQUALS) + 1;
-        }
-        if (str[position++] !== LBRACE) {
-          throw new Error("Invalid array text - must start with {");
-        }
-        const output = [];
-        let current = output;
-        const stack = [];
-        let currentStringStart = position;
-        let currentString = "";
-        let expectValue = true;
-        for (; position < rbraceIndex; ++position) {
-          let char = str[position];
-          if (char === DQUOT) {
-            currentStringStart = ++position;
-            let dquot = str.indexOf(DQUOT, currentStringStart);
-            let backSlash = str.indexOf(BACKSLASH, currentStringStart);
-            while (backSlash !== -1 && backSlash < dquot) {
-              position = backSlash;
-              const part2 = str.slice(currentStringStart, position);
-              currentString += part2;
-              currentStringStart = ++position;
-              if (dquot === position++) {
-                dquot = str.indexOf(DQUOT, position);
-              }
-              backSlash = str.indexOf(BACKSLASH, position);
-            }
-            position = dquot;
-            const part = str.slice(currentStringStart, position);
-            currentString += part;
-            current.push(haveTransform ? transform(currentString) : currentString);
-            currentString = "";
-            expectValue = false;
-          } else if (char === LBRACE) {
-            const newArray = [];
-            current.push(newArray);
-            stack.push(current);
-            current = newArray;
-            currentStringStart = position + 1;
-            expectValue = true;
-          } else if (char === COMMA) {
-            expectValue = true;
-          } else if (char === RBRACE) {
-            expectValue = false;
-            const arr = stack.pop();
-            if (arr === void 0) {
-              throw new Error("Invalid array text - too many '}'");
-            }
-            current = arr;
-          } else if (expectValue) {
-            currentStringStart = position;
-            while ((char = str[position]) !== COMMA && char !== RBRACE && position < rbraceIndex) {
-              ++position;
-            }
-            const part = str.slice(currentStringStart, position--);
-            current.push(
-              part === NULL_STRING ? null : haveTransform ? transform(part) : part
-            );
-            expectValue = false;
-          } else {
-            throw new Error("Was expecting delimeter");
-          }
-        }
-        return output;
-      };
-    }
-    var parseArray2 = makeParseArrayWithTransform();
-    exports2.parse = (source, transform) => transform != null ? makeParseArrayWithTransform(transform)(source) : parseArray2(source);
-  }
-});
 
 // generated/client/runtime/client.js
 var require_client = __commonJS({
@@ -2177,7 +2082,7 @@ Note that ${s.bold("include")} statements only accept relation fields.`, a;
         return e[t];
       } };
     }
-    function $2(e, t) {
+    function $(e, t) {
       return { getKeys() {
         return [e];
       }, getPropertyValue() {
@@ -2399,7 +2304,7 @@ Note that ${s.bold("include")} statements only accept relation fields.`, a;
     var ep = ["findUnique", "findUniqueOrThrow", "findFirst", "findFirstOrThrow", "create", "update", "upsert", "delete"];
     var tp = ["aggregate", "count", "groupBy"];
     function xn(e, t) {
-      let r = e._extensions.getAllModelExtensions(t) ?? {}, n = [rp(e, t), ip(e, t), Tt(r), $2("name", () => t), $2("$name", () => t), $2("$parent", () => e._appliedParent)];
+      let r = e._extensions.getAllModelExtensions(t) ?? {}, n = [rp(e, t), ip(e, t), Tt(r), $("name", () => t), $("$name", () => t), $("$parent", () => e._appliedParent)];
       return W({}, n);
     }
     function rp(e, t) {
@@ -2421,7 +2326,7 @@ Note that ${s.bold("include")} statements only accept relation fields.`, a;
       return tp.includes(e);
     }
     function ip(e, t) {
-      return Ee($2("fields", () => {
+      return Ee($("fields", () => {
         let r = e._runtimeDataModel.models[t];
         return jo(t, r);
       }));
@@ -2431,7 +2336,7 @@ Note that ${s.bold("include")} statements only accept relation fields.`, a;
     }
     var En = /* @__PURE__ */ Symbol();
     function vt(e) {
-      let t = [op(e), sp(e), $2(En, () => e), $2("$parent", () => e._appliedParent)], r = e._extensions.getAllClientExtensions();
+      let t = [op(e), sp(e), $(En, () => e), $("$parent", () => e._appliedParent)], r = e._extensions.getAllClientExtensions();
       return r && t.push(Tt(r)), W(e, t);
     }
     function op(e) {
@@ -2484,7 +2389,7 @@ Note that ${s.bold("include")} statements only accept relation fields.`, a;
       return t.every((r) => sn(e, r));
     }
     function lp(e, t) {
-      return Ee($2(e.name, () => e.compute(t)));
+      return Ee($(e.name, () => e.compute(t)));
     }
     function hr({ visitor: e, result: t, args: r, runtimeDataModel: n, modelName: i }) {
       if (Array.isArray(t)) {
@@ -6168,7 +6073,7 @@ new PrismaClient({
         }
         _createItxClient(n, i, o) {
           let s = { kind: "nested", txId: n.id, scopeId: i, scopeState: o };
-          return W(vt(W(Jo(this), [$2("_appliedParent", () => this._appliedParent._createItxClient(n, i, o)), $2("_createPrismaPromise", () => mi(n)), $2(Wl, () => s)])), [Je(Ko)]);
+          return W(vt(W(Jo(this), [$("_appliedParent", () => this._appliedParent._createItxClient(n, i, o)), $("_createPrismaPromise", () => mi(n)), $(Wl, () => s)])), [Je(Ko)]);
         }
         $transaction(n, i) {
           var _a2;
@@ -6358,7 +6263,7 @@ var require_query_compiler_fast_bg = __commonJS({
       return e instanceof Error ? `${e.name}: ${e.message}
 ${e.stack}` : _;
     }
-    function $2(e, t) {
+    function $(e, t) {
       return e = e >>> 0, a().subarray(e / 1, e / 1 + t);
     }
     function w(e) {
@@ -6495,7 +6400,7 @@ ${e.stack}` : _;
       return new Array();
     }
     function fe(e, t, n) {
-      Uint8Array.prototype.set.call($2(e, t), n);
+      Uint8Array.prototype.set.call($(e, t), n);
     }
     function be(e, t, n) {
       e[t] = n;
@@ -6555,7 +6460,7 @@ var require_client2 = __commonJS({
       raw: raw2,
       skip: skip2,
       Decimal: Decimal2,
-      Debug: Debug3,
+      Debug: Debug2,
       DbNull: DbNull2,
       JsonNull: JsonNull2,
       AnyNull: AnyNull2,
@@ -6601,9 +6506,56 @@ var require_client2 = __commonJS({
     });
     exports2.Prisma.UserScalarFieldEnum = {
       id: "id",
-      name: "name",
+      username: "username",
       email: "email",
-      emailVerified: "emailVerified"
+      password: "password",
+      createdAt: "createdAt",
+      updatedAt: "updatedAt"
+    };
+    exports2.Prisma.MarketScalarFieldEnum = {
+      id: "id",
+      slug: "slug",
+      baseCurrency: "baseCurrency",
+      quoteCurrency: "quoteCurrency",
+      imageUrl: "imageUrl",
+      tickSize: "tickSize",
+      minOrderSize: "minOrderSize",
+      maxOrderSize: "maxOrderSize",
+      maxLeverage: "maxLeverage",
+      makerFeeRate: "makerFeeRate",
+      takerFeeRate: "takerFeeRate",
+      maintenanceMarginRate: "maintenanceMarginRate",
+      initialMarginRate: "initialMarginRate",
+      isActive: "isActive",
+      createdAt: "createdAt"
+    };
+    exports2.Prisma.OrderScalarFieldEnum = {
+      id: "id",
+      userId: "userId",
+      marketId: "marketId",
+      side: "side",
+      type: "type",
+      status: "status",
+      qty: "qty",
+      price: "price",
+      filledQty: "filledQty",
+      remainingQty: "remainingQty",
+      leverage: "leverage",
+      slippage: "slippage",
+      createdAt: "createdAt",
+      updatedAt: "updatedAt"
+    };
+    exports2.Prisma.FillScalarFieldEnum = {
+      id: "id",
+      orderId: "orderId",
+      userId: "userId",
+      marketId: "marketId",
+      side: "side",
+      role: "role",
+      quantity: "quantity",
+      price: "price",
+      fee: "fee",
+      createdAt: "createdAt"
     };
     exports2.Prisma.SortOrder = {
       asc: "asc",
@@ -6617,21 +6569,252 @@ var require_client2 = __commonJS({
       first: "first",
       last: "last"
     };
+    exports2.OrderSide = exports2.$Enums.OrderSide = {
+      buy: "buy",
+      sell: "sell"
+    };
+    exports2.OrderType = exports2.$Enums.OrderType = {
+      market: "market",
+      limit: "limit"
+    };
+    exports2.OrderStatus = exports2.$Enums.OrderStatus = {
+      open: "open",
+      fulfilled: "fulfilled",
+      cancelled: "cancelled",
+      partiallyFilled: "partiallyFilled",
+      rejected: "rejected"
+    };
+    exports2.PositionStatus = exports2.$Enums.PositionStatus = {
+      open: "open",
+      closed: "closed",
+      liquidated: "liquidated"
+    };
+    exports2.FillRole = exports2.$Enums.FillRole = {
+      maker: "maker",
+      taker: "taker"
+    };
     exports2.Prisma.ModelName = {
-      User: "User"
+      User: "User",
+      Market: "Market",
+      Order: "Order",
+      Fill: "Fill"
     };
     var config = {
       "previewFeatures": [],
       "clientVersion": "7.8.0",
       "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
       "activeProvider": "postgresql",
-      "inlineSchema": '// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ndatasource db {\n  provider = "postgresql"\n}\n\ngenerator client {\n  provider = "prisma-client-js"\n  output   = "../generated/client"\n}\n\nmodel User {\n  id            String    @id @default(cuid())\n  name          String?\n  email         String?   @unique\n  emailVerified DateTime?\n}\n'
+      "inlineSchema": `// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+enum OrderSide {
+  buy
+  sell
+}
+
+enum OrderType {
+  market
+  limit
+}
+
+enum OrderStatus {
+  open
+  fulfilled
+  cancelled
+  partiallyFilled
+  rejected
+}
+
+enum PositionStatus {
+  open
+  closed
+  liquidated
+}
+
+enum FillRole {
+  maker
+  taker
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // wallet Wallet?
+  orders Order[]
+  fills  Fill[]
+  // positions       Position[]
+  // fundingPayments FundingPayment[]
+}
+
+// model Wallet {
+//   id             String   @id @default(uuid())
+//   userId         String   @unique
+//   balance        BigInt   @default(0)
+//   lockedMargin   BigInt   @default(0)
+//   totalDeposited BigInt   @default(0) // lifetime
+//   totalWithdrawn BigInt   @default(0) // lifetime
+//   updatedAt      DateTime @updatedAt
+
+//   user User @relation(fields: [userId], references: [id])
+// }
+
+model Market {
+  id            String  @id @default(uuid())
+  slug          String  @unique
+  baseCurrency  String
+  quoteCurrency String
+  imageUrl      String?
+
+  tickSize              BigInt
+  minOrderSize          BigInt // min order quantity
+  maxOrderSize          BigInt // max order quantity
+  maxLeverage           Int
+  makerFeeRate          BigInt
+  takerFeeRate          BigInt
+  maintenanceMarginRate Int // minimum balance to maintain otherwise it get's liquidated like 0.5%
+  initialMarginRate     Int // minimum balance to open an order like 1%
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+
+  orders Order[]
+  fills  Fill[]
+  // positions       Position[]
+  // fundingRates    FundingRate[]
+  // fundingPayments FundingPayment[]
+}
+
+model Order {
+  id       String      @id @default(uuid())
+  userId   String
+  marketId String
+  side     OrderSide
+  type     OrderType
+  status   OrderStatus
+
+  qty          BigInt
+  price        BigInt?
+  filledQty    BigInt  @default(0)
+  remainingQty BigInt
+
+  leverage  Int      @default(1)
+  slippage  Int // max allowed slippage for market orders
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  market Market @relation(fields: [marketId], references: [id])
+  fills  Fill[]
+
+  @@index([userId])
+}
+
+model Fill {
+  id        String    @id @default(uuid())
+  orderId   String
+  userId    String
+  marketId  String
+  side      OrderSide
+  role      FillRole // maker or taker
+  quantity  BigInt
+  price     BigInt
+  fee       BigInt
+  createdAt DateTime  @default(now())
+
+  order  Order  @relation(fields: [orderId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  market Market @relation(fields: [marketId], references: [id])
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([marketId])
+}
+
+// model Position {
+//   id               String         @id @default(uuid())
+//   userId           String
+//   marketId         String
+//   side             OrderSide
+//   status           PositionStatus @default(open)
+//   size             BigInt // current position size
+//   entryPrice       BigInt // average
+//   liquidationPrice BigInt
+//   margin           BigInt
+//   unrealizedPnL    BigInt
+//   realizedPnL      BigInt
+//   openedAt         DateTime       @default(now())
+//   updatedAt        DateTime       @updatedAt
+
+//   user        User         @relation(fields: [userId], references: [id])
+//   market      Market       @relation(fields: [marketId], references: [id])
+//   liquidation Liquidation?
+
+//   @@unique([userId, marketId, side, status]) // only one open position per market
+//   @@index([userId])
+// }
+
+// model Liquidation {
+//   id           String   @id @default(uuid())
+//   positionId   String   @unique
+//   sizeAtLiq    BigInt // size at the time of liquidation
+//   priceAtLiq   BigInt // price that trigered liquidation
+//   marginLost   BigInt
+//   liquidatedAt DateTime @default(now())
+
+//   position Position @relation(fields: [positionId], references: [id])
+// }
+
+// model FundingRate {
+//   id         String   @id @default(uuid())
+//   marketId   String
+//   rate       BigInt // funding rate can be negative
+//   markPrice  BigInt // current price in the exchange
+//   indexPrice BigInt // original price of an asset from binance mostly
+//   timestamp  DateTime @default(now())
+
+//   market          Market           @relation(fields: [marketId], references: [id])
+//   fundingPayments FundingPayment[]
+
+//   @@index([marketId])
+// }
+
+// model FundingPayment {
+//   id            String   @id @default(uuid())
+//   userId        String
+//   marketId      String
+//   fundingRateId String
+//   amount        BigInt // positive = paid, negative = received
+//   positionSize  BigInt // size of position at payment time
+//   paidAt        DateTime @default(now())
+
+//   user        User        @relation(fields: [userId], references: [id])
+//   market      Market      @relation(fields: [marketId], references: [id])
+//   fundingRate FundingRate @relation(fields: [fundingRateId], references: [id])
+
+//   @@index([userId])
+//   @@index([marketId])
+//   @@index([fundingRateId])
+// }
+`
     };
-    config.runtimeDataModel = JSON.parse('{"models":{"User":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"name","kind":"scalar","type":"String"},{"name":"email","kind":"scalar","type":"String"},{"name":"emailVerified","kind":"scalar","type":"DateTime"}],"dbName":null}},"enums":{},"types":{}}');
+    config.runtimeDataModel = JSON.parse('{"models":{"User":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"username","kind":"scalar","type":"String"},{"name":"email","kind":"scalar","type":"String"},{"name":"password","kind":"scalar","type":"String"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"orders","kind":"object","type":"Order","relationName":"OrderToUser"},{"name":"fills","kind":"object","type":"Fill","relationName":"FillToUser"}],"dbName":null},"Market":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"slug","kind":"scalar","type":"String"},{"name":"baseCurrency","kind":"scalar","type":"String"},{"name":"quoteCurrency","kind":"scalar","type":"String"},{"name":"imageUrl","kind":"scalar","type":"String"},{"name":"tickSize","kind":"scalar","type":"BigInt"},{"name":"minOrderSize","kind":"scalar","type":"BigInt"},{"name":"maxOrderSize","kind":"scalar","type":"BigInt"},{"name":"maxLeverage","kind":"scalar","type":"Int"},{"name":"makerFeeRate","kind":"scalar","type":"BigInt"},{"name":"takerFeeRate","kind":"scalar","type":"BigInt"},{"name":"maintenanceMarginRate","kind":"scalar","type":"Int"},{"name":"initialMarginRate","kind":"scalar","type":"Int"},{"name":"isActive","kind":"scalar","type":"Boolean"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"orders","kind":"object","type":"Order","relationName":"MarketToOrder"},{"name":"fills","kind":"object","type":"Fill","relationName":"FillToMarket"}],"dbName":null},"Order":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"marketId","kind":"scalar","type":"String"},{"name":"side","kind":"enum","type":"OrderSide"},{"name":"type","kind":"enum","type":"OrderType"},{"name":"status","kind":"enum","type":"OrderStatus"},{"name":"qty","kind":"scalar","type":"BigInt"},{"name":"price","kind":"scalar","type":"BigInt"},{"name":"filledQty","kind":"scalar","type":"BigInt"},{"name":"remainingQty","kind":"scalar","type":"BigInt"},{"name":"leverage","kind":"scalar","type":"Int"},{"name":"slippage","kind":"scalar","type":"Int"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"updatedAt","kind":"scalar","type":"DateTime"},{"name":"user","kind":"object","type":"User","relationName":"OrderToUser"},{"name":"market","kind":"object","type":"Market","relationName":"MarketToOrder"},{"name":"fills","kind":"object","type":"Fill","relationName":"FillToOrder"}],"dbName":null},"Fill":{"fields":[{"name":"id","kind":"scalar","type":"String"},{"name":"orderId","kind":"scalar","type":"String"},{"name":"userId","kind":"scalar","type":"String"},{"name":"marketId","kind":"scalar","type":"String"},{"name":"side","kind":"enum","type":"OrderSide"},{"name":"role","kind":"enum","type":"FillRole"},{"name":"quantity","kind":"scalar","type":"BigInt"},{"name":"price","kind":"scalar","type":"BigInt"},{"name":"fee","kind":"scalar","type":"BigInt"},{"name":"createdAt","kind":"scalar","type":"DateTime"},{"name":"order","kind":"object","type":"Order","relationName":"FillToOrder"},{"name":"user","kind":"object","type":"User","relationName":"FillToUser"},{"name":"market","kind":"object","type":"Market","relationName":"FillToMarket"}],"dbName":null}},"enums":{},"types":{}}');
     defineDmmfProperty2(exports2.Prisma, config.runtimeDataModel);
     config.parameterizationSchema = {
-      strings: JSON.parse('["where","User.findUnique","User.findUniqueOrThrow","orderBy","cursor","User.findFirst","User.findFirstOrThrow","User.findMany","data","User.createOne","User.createMany","User.createManyAndReturn","User.updateOne","User.updateMany","User.updateManyAndReturn","create","update","User.upsertOne","User.deleteOne","User.deleteMany","having","_count","_min","_max","User.groupBy","User.aggregate","AND","OR","NOT","id","name","email","emailVerified","equals","in","notIn","lt","lte","gt","gte","not","contains","startsWith","endsWith","set"]'),
-      graph: "MAkQBxoAACYAMBsAAAQAEBwAACYAMB0BAAAAAR4BACgAIR8BAAAAASBAACkAIQEAAAABACABAAAAAQAgBxoAACYAMBsAAAQAEBwAACYAMB0BACcAIR4BACgAIR8BACgAISBAACkAIQMeAAAqACAfAAAqACAgAAAqACADAAAABAAgAwAABQAwBAAAAQAgAwAAAAQAIAMAAAUAMAQAAAEAIAMAAAAEACADAAAFADAEAAABACAEHQEAAAABHgEAAAABHwEAAAABIEAAAAABAQgAAAkAIAQdAQAAAAEeAQAAAAEfAQAAAAEgQAAAAAEBCAAACwAwAQgAAAsAMAQdAQAuACEeAQAvACEfAQAvACEgQAAwACECAAAAAQAgCAAADgAgBB0BAC4AIR4BAC8AIR8BAC8AISBAADAAIQIAAAAEACAIAAAQACACAAAABAAgCAAAEAAgAwAAAAEAIA8AAAkAIBAAAA4AIAEAAAABACABAAAABAAgBhUAACsAIBYAAC0AIBcAACwAIB4AACoAIB8AACoAICAAACoAIAcaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAcACEfAQAcACEgQAAdACEDAAAABAAgAwAAFgAwFAAAFwAgAwAAAAQAIAMAAAUAMAQAAAEAIAcaAAAaADAbAAAXABAcAAAaADAdAQAbACEeAQAcACEfAQAcACEgQAAdACEOFQAAJAAgFgAAJQAgFwAAJQAgIQEAAAABIgEAAAAEIwEAAAAEJAEAAAABJQEAAAABJgEAAAABJwEAAAABKAEAIwAhKQEAAAABKgEAAAABKwEAAAABDhUAAB8AIBYAACIAIBcAACIAICEBAAAAASIBAAAABSMBAAAABSQBAAAAASUBAAAAASYBAAAAAScBAAAAASgBACEAISkBAAAAASoBAAAAASsBAAAAAQsVAAAfACAWAAAgACAXAAAgACAhQAAAAAEiQAAAAAUjQAAAAAUkQAAAAAElQAAAAAEmQAAAAAEnQAAAAAEoQAAeACELFQAAHwAgFgAAIAAgFwAAIAAgIUAAAAABIkAAAAAFI0AAAAAFJEAAAAABJUAAAAABJkAAAAABJ0AAAAABKEAAHgAhCCECAAAAASICAAAABSMCAAAABSQCAAAAASUCAAAAASYCAAAAAScCAAAAASgCAB8AIQghQAAAAAEiQAAAAAUjQAAAAAUkQAAAAAElQAAAAAEmQAAAAAEnQAAAAAEoQAAgACEOFQAAHwAgFgAAIgAgFwAAIgAgIQEAAAABIgEAAAAFIwEAAAAFJAEAAAABJQEAAAABJgEAAAABJwEAAAABKAEAIQAhKQEAAAABKgEAAAABKwEAAAABCyEBAAAAASIBAAAABSMBAAAABSQBAAAAASUBAAAAASYBAAAAAScBAAAAASgBACIAISkBAAAAASoBAAAAASsBAAAAAQ4VAAAkACAWAAAlACAXAAAlACAhAQAAAAEiAQAAAAQjAQAAAAQkAQAAAAElAQAAAAEmAQAAAAEnAQAAAAEoAQAjACEpAQAAAAEqAQAAAAErAQAAAAEIIQIAAAABIgIAAAAEIwIAAAAEJAIAAAABJQIAAAABJgIAAAABJwIAAAABKAIAJAAhCyEBAAAAASIBAAAABCMBAAAABCQBAAAAASUBAAAAASYBAAAAAScBAAAAASgBACUAISkBAAAAASoBAAAAASsBAAAAAQcaAAAmADAbAAAEABAcAAAmADAdAQAnACEeAQAoACEfAQAoACEgQAApACELIQEAAAABIgEAAAAEIwEAAAAEJAEAAAABJQEAAAABJgEAAAABJwEAAAABKAEAJQAhKQEAAAABKgEAAAABKwEAAAABCyEBAAAAASIBAAAABSMBAAAABSQBAAAAASUBAAAAASYBAAAAAScBAAAAASgBACIAISkBAAAAASoBAAAAASsBAAAAAQghQAAAAAEiQAAAAAUjQAAAAAUkQAAAAAElQAAAAAEmQAAAAAEnQAAAAAEoQAAgACEAAAAAASwBAAAAAQEsAQAAAAEBLEAAAAABAAAAAAMVAAYWAAcXAAgAAAADFQAGFgAHFwAIAQIBAgMBBQYBBgcBBwgBCQoBCgwCCw0DDA8BDRECDhIEERMBEhQBExUCGBgFGRkJ"
+      strings: JSON.parse('["where","orderBy","cursor","user","orders","order","market","fills","_count","User.findUnique","User.findUniqueOrThrow","User.findFirst","User.findFirstOrThrow","User.findMany","data","User.createOne","User.createMany","User.createManyAndReturn","User.updateOne","User.updateMany","User.updateManyAndReturn","create","update","User.upsertOne","User.deleteOne","User.deleteMany","having","_min","_max","User.groupBy","User.aggregate","Market.findUnique","Market.findUniqueOrThrow","Market.findFirst","Market.findFirstOrThrow","Market.findMany","Market.createOne","Market.createMany","Market.createManyAndReturn","Market.updateOne","Market.updateMany","Market.updateManyAndReturn","Market.upsertOne","Market.deleteOne","Market.deleteMany","_avg","_sum","Market.groupBy","Market.aggregate","Order.findUnique","Order.findUniqueOrThrow","Order.findFirst","Order.findFirstOrThrow","Order.findMany","Order.createOne","Order.createMany","Order.createManyAndReturn","Order.updateOne","Order.updateMany","Order.updateManyAndReturn","Order.upsertOne","Order.deleteOne","Order.deleteMany","Order.groupBy","Order.aggregate","Fill.findUnique","Fill.findUniqueOrThrow","Fill.findFirst","Fill.findFirstOrThrow","Fill.findMany","Fill.createOne","Fill.createMany","Fill.createManyAndReturn","Fill.updateOne","Fill.updateMany","Fill.updateManyAndReturn","Fill.upsertOne","Fill.deleteOne","Fill.deleteMany","Fill.groupBy","Fill.aggregate","AND","OR","NOT","id","orderId","userId","marketId","OrderSide","side","FillRole","role","quantity","price","fee","createdAt","equals","in","notIn","lt","lte","gt","gte","not","contains","startsWith","endsWith","OrderType","type","OrderStatus","status","qty","filledQty","remainingQty","leverage","slippage","updatedAt","slug","baseCurrency","quoteCurrency","imageUrl","tickSize","minOrderSize","maxOrderSize","maxLeverage","makerFeeRate","takerFeeRate","maintenanceMarginRate","initialMarginRate","isActive","every","some","none","username","email","password","is","isNot","connectOrCreate","upsert","createMany","set","disconnect","delete","connect","updateMany","deleteMany","increment","decrement","multiply","divide"]'),
+      graph: "sgIqQAsEAACdAQAgBwAAngEAIFEAAKABADBSAAAUABBTAACgAQAwVAEAAAABX0AAnAEAIXRAAJwBACGFAQEAAAABhgEBAAAAAYcBAQCXAQAhAQAAAAEAIBQDAAClAQAgBgAApgEAIAcAAJ4BACBRAACnAQAwUgAAAwAQUwAApwEAMFQBAJcBACFWAQCXAQAhVwEAlwEAIVkAAKIBWSJdBACqAQAhX0AAnAEAIWwAAKgBbCJuAACpAW4ibwQAmQEAIXAEAJkBACFxBACZAQAhcgIAmgEAIXMCAJoBACF0QACcAQAhBAMAAJMCACAGAACUAgAgBwAA-AEAIF0AALsBACAUAwAApQEAIAYAAKYBACAHAACeAQAgUQAApwEAMFIAAAMAEFMAAKcBADBUAQAAAAFWAQCXAQAhVwEAlwEAIVkAAKIBWSJdBACqAQAhX0AAnAEAIWwAAKgBbCJuAACpAW4ibwQAmQEAIXAEAJkBACFxBACZAQAhcgIAmgEAIXMCAJoBACF0QACcAQAhAwAAAAMAIAEAAAQAMAIAAAUAIAMAAAADACABAAAEADACAAAFACAQAwAApQEAIAUAAKQBACAGAACmAQAgUQAAoQEAMFIAAAgAEFMAAKEBADBUAQCXAQAhVQEAlwEAIVYBAJcBACFXAQCXAQAhWQAAogFZIlsAAKMBWyJcBACZAQAhXQQAmQEAIV4EAJkBACFfQACcAQAhAwMAAJMCACAFAACSAgAgBgAAlAIAIBADAAClAQAgBQAApAEAIAYAAKYBACBRAAChAQAwUgAACAAQUwAAoQEAMFQBAAAAAVUBAJcBACFWAQCXAQAhVwEAlwEAIVkAAKIBWSJbAACjAVsiXAQAmQEAIV0EAJkBACFeBACZAQAhX0AAnAEAIQMAAAAIACABAAAJADACAAAKACABAAAAAwAgAQAAAAgAIAMAAAAIACABAAAJADACAAAKACABAAAACAAgAwAAAAgAIAEAAAkAMAIAAAoAIAEAAAADACABAAAACAAgAQAAAAEAIAsEAACdAQAgBwAAngEAIFEAAKABADBSAAAUABBTAACgAQAwVAEAlwEAIV9AAJwBACF0QACcAQAhhQEBAJcBACGGAQEAlwEAIYcBAQCXAQAhAgQAAPcBACAHAAD4AQAgAwAAABQAIAEAABUAMAIAAAEAIAMAAAAUACABAAAVADACAAABACADAAAAFAAgAQAAFQAwAgAAAQAgCAQAAJACACAHAACRAgAgVAEAAAABX0AAAAABdEAAAAABhQEBAAAAAYYBAQAAAAGHAQEAAAABAQ4AABkAIAZUAQAAAAFfQAAAAAF0QAAAAAGFAQEAAAABhgEBAAAAAYcBAQAAAAEBDgAAGwAwAQ4AABsAMAgEAAD8AQAgBwAA_QEAIFQBALABACFfQAC0AQAhdEAAtAEAIYUBAQCwAQAhhgEBALABACGHAQEAsAEAIQIAAAABACAOAAAeACAGVAEAsAEAIV9AALQBACF0QAC0AQAhhQEBALABACGGAQEAsAEAIYcBAQCwAQAhAgAAABQAIA4AACAAIAIAAAAUACAOAAAgACADAAAAAQAgFQAAGQAgFgAAHgAgAQAAAAEAIAEAAAAUACADCAAA-QEAIBsAAPsBACAcAAD6AQAgCVEAAJ8BADBSAAAnABBTAACfAQAwVAEAcAAhX0AAdAAhdEAAdAAhhQEBAHAAIYYBAQBwACGHAQEAcAAhAwAAABQAIAEAACYAMBoAACcAIAMAAAAUACABAAAVADACAAABACAUBAAAnQEAIAcAAJ4BACBRAACWAQAwUgAALQAQUwAAlgEAMFQBAAAAAV9AAJwBACF1AQAAAAF2AQCXAQAhdwEAlwEAIXgBAJgBACF5BACZAQAhegQAmQEAIXsEAJkBACF8AgCaAQAhfQQAmQEAIX4EAJkBACF_AgCaAQAhgAECAJoBACGBASAAmwEAIQEAAAAqACABAAAAKgAgFAQAAJ0BACAHAACeAQAgUQAAlgEAMFIAAC0AEFMAAJYBADBUAQCXAQAhX0AAnAEAIXUBAJcBACF2AQCXAQAhdwEAlwEAIXgBAJgBACF5BACZAQAhegQAmQEAIXsEAJkBACF8AgCaAQAhfQQAmQEAIX4EAJkBACF_AgCaAQAhgAECAJoBACGBASAAmwEAIQMEAAD3AQAgBwAA-AEAIHgAALsBACADAAAALQAgAQAALgAwAgAAKgAgAwAAAC0AIAEAAC4AMAIAACoAIAMAAAAtACABAAAuADACAAAqACARBAAA9QEAIAcAAPYBACBUAQAAAAFfQAAAAAF1AQAAAAF2AQAAAAF3AQAAAAF4AQAAAAF5BAAAAAF6BAAAAAF7BAAAAAF8AgAAAAF9BAAAAAF-BAAAAAF_AgAAAAGAAQIAAAABgQEgAAAAAQEOAAAyACAPVAEAAAABX0AAAAABdQEAAAABdgEAAAABdwEAAAABeAEAAAABeQQAAAABegQAAAABewQAAAABfAIAAAABfQQAAAABfgQAAAABfwIAAAABgAECAAAAAYEBIAAAAAEBDgAANAAwAQ4AADQAMBEEAADeAQAgBwAA3wEAIFQBALABACFfQAC0AQAhdQEAsAEAIXYBALABACF3AQCwAQAheAEA3AEAIXkEALMBACF6BACzAQAhewQAswEAIXwCAMQBACF9BACzAQAhfgQAswEAIX8CAMQBACGAAQIAxAEAIYEBIADdAQAhAgAAACoAIA4AADcAIA9UAQCwAQAhX0AAtAEAIXUBALABACF2AQCwAQAhdwEAsAEAIXgBANwBACF5BACzAQAhegQAswEAIXsEALMBACF8AgDEAQAhfQQAswEAIX4EALMBACF_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-ACAcAAB-ACBgAAAAWQJhAAAAWQhiAAAAWQhnAAB9WSIHCAAAdgAgGwAAfAAgHAAAfAAgYAAAAFsCYQAAAFsIYgAAAFsIZwAAe1siDQgAAHYAIBsAAHoAIBwAAHoAIC0AAHkAIC4AAHoAIGAEAAAAAWEEAAAABGIEAAAABGMEAAAAAWQEAAAAAWUEAAAAAWYEAAAAAWcEAHgAIQsIAAB2ACAbAAB3ACAcAAB3ACBgQAAAAAFhQAAAAARiQAAAAARjQAAAAAFkQAAAAAFlQAAAAAFmQAAAAAFnQAB1ACELCAAAdgAgGwAAdwAgHAAAdwAgYEAAAAABYUAAAAAEYkAAAAAEY0AAAAABZEAAAAABZUAAAAABZkAAAAABZ0AAdQAhCGACAAAAAWECAAAABGICAAAABGMCAAAAAWQCAAAAAWUCAAAAAWYCAAAAAWcCAHYAIQhgQAAAAAFhQAAAAARiQAAAAARjQAAAAAFkQAAAAAFlQAAAAAFmQAAAAAFnQAB3ACENCAAAdgAgGwAAegAgHAAAegAgLQAAeQAgLgAAegAgYAQAAAABYQQAAAAEYgQAAAAEYwQAAAABZAQAAAABZQQAAAABZgQAAAABZwQAeAAhCGAIAAAAAWEIAAAABGIIAAAABGMIAAAAAWQIAAAAAWUIAAAAAWYIAAAAAWcIAHkAIQhgBAAAAAFhBAAAAARiBAAAAARjBAAAAAFkBAAAAAFlBAAAAAFmBAAAAAFnBAB6ACEHCAAAdgAgGwAAfAAgHAAAfAAgYAAAAFsCYQAAAFsIYgAAAFsIZwAAe1siBGAAAABbAmEAAABbCGIAAABbCGcAAHxbIgcIAAB2ACAbAAB-ACAcAAB-ACBgAAAAWQJhAAAAWQhiAAAAWQhnAAB9WSIEYAAAAFkCYQAAAFkIYgAAAFkIZwAAflkiDggAAHYAIBsAAIABACAcAACAAQAgYAEAAAABYQEAAAAEYgEAAAAEYwEAAAABZAEAAAABZQEAAAABZgEAAAABZwEAfwAhaAEAAAABaQEAAAABagEAAAABC2ABAAAAAWEBAAAABGIBAAAABGMBAAAAAWQBAAAAAWUBAAAAAWYBAAAAAWcBAIABACFoAQAAAAFpAQAAAAFqAQAAAAERUQAAgQEAMFIAAFYAEFMAAIEBADBUAQBwACFWAQBwACFXAQBwACFZAABxWSJdBACEAQAhX0AAdAAhbAAAggFsIm4AAIMBbiJvBABzACFwBABzACFxBABzACFyAgCFAQAhcwIAhQEAIXRAAHQAIQcIAAB2ACAbAACOAQAgHAAAjgEAIGAAAABsAmEAAABsCGIAAABsCGcAAI0BbCIHCAAAdgAgGwAAjAEAIBwAAIwBACBgAAAAbgJhAAAAbghiAAAAbghnAACLAW4iDQgAAIgBACAbAACKAQAgHAAAigEAIC0AAIkBACAuAACKAQAgYAQAAAABYQQAAAAFYgQAAAAFYwQAAAABZAQAAAABZQQAAAABZgQAAAABZwQAhwEAIQ0IAAB2ACAbAAB2ACAcAAB2ACAtAAB5ACAuAAB2ACBgAgAAAAFhAgAAAARiAgAAAARjAgAAAAFkAgAAAAFlAgAAAAFmAgAAAAFnAgCGAQAhDQgAAHYAIBsAAHYAIBwAAHYAIC0AAHkAIC4AAHYAIGACAAAAAWECAAAABGICAAAABGMCAAAAAWQCAAAAAWUCAAAAAWYCAAAAAWcCAIYBACENCAAAiAEAIBsAAIoBACAcAACKAQAgLQAAiQEAIC4AAIoBACBgBAAAAAFhBAAAAAViBAAAAAVjBAAAAAFkBAAAAAFlBAAAAAFmBAAAAAFnBACHAQAhCGACAAAAAWECAAAABWICAAAABWMCAAAAAWQCAAAAAWUCAAAAAWYCAAAAAWcCAIgBACEIYAgAAAABYQgAAAAFYggAAAAFYwgAAAABZAgAAAABZQgAAAABZggAAAABZwgAiQEAIQhgBAAAAAFhBAAAAAViBAAAAAVjBAAAAAFkBAAAAAFlBAAAAAFmBAAAAAFnBACKAQAhBwgAAHYAIBsAAIwBACAcAACMAQAgYAAAAG4CYQAAAG4IYgAAAG4IZwAAiwFuIgRgAAAAbgJhAAAAbghiAAAAbghnAACMAW4iBwgAAHYAIBsAAI4BACAcAACOAQAgYAAAAGwCYQAAAGwIYgAAAGwIZwAAjQFsIgRgAAAAbAJhAAAAbAhiAAAAbAhnAACOAWwiElEAAI8BADBSAABAABBTAACPAQAwVAEAcAAhX0AAdAAhdQEAcAAhdgEAcAAhdwEAcAAheAEAkAEAIXkEAHMAIXoEAHMAIXsEAHMAIXwCAIUBACF9BABzACF-BABzACF_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_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_wEAMIwBAACBAgAgkAEAAMwBADAEAwAAkwIAIAYAAJQCACAHAAD4AQAgXQAAuwEAIAIEAAD3AQAgBwAA-AEAIAMEAAD3AQAgBwAA-AEAIHgAALsBACANVAEAAAABVwEAAAABWQAAAFkCXQQAAAABX0AAAAABbAAAAGwCbgAAAG4CbwQAAAABcAQAAAABcQQAAAABcgIAAAABcwIAAAABdEAAAAABCVQBAAAAAVUBAAAAAVcBAAAAAVkAAABZAlsAAABbAlwEAAAAAV0EAAAAAV4EAAAAAV9AAAAAAQ1UAQAAAAFWAQAAAAFZAAAAWQJdBAAAAAFfQAAAAAFsAAAAbAJuAAAAbgJvBAAAAAFwBAAAAAFxBAAAAAFyAgAAAAFzAgAAAAF0QAAAAAEJVAEAAAABVQEAAAABVgEAAAABWQAAAFkCWwAAAFsCXAQAAAABXQQAAAABXgQAAAABX0AAAAABEAcAAPYBACBUAQAAAAFfQAAAAAF1AQAAAAF2AQAAAAF3AQAAAAF4AQAAAAF5BAAAAAF6BAAAAAF7BAAAAAF8AgAAAAF9BAAAAAF-BAAAAAF_AgAAAAGAAQIAAAABgQEgAAAAAQIAAAAqACAVAACZAgAgBwcAAJECACBUAQAAAAFfQAAAAAF0QAAAAAGFAQEAAAABhgEBAAAAAYcBAQAAAAECAAAAAQAgFQAAmwIAIAlUAQAAAAFWAQAAAAFXAQAAAAFZAAAAWQJbAAAAWwJcBAAAAAFdBAAAAAFeBAAAAAFfQAAAAAEDAAAALQAgFQAAmQIAIBYAAKACACASAAAALQAgBwAA3wEAIA4AAKACACBUAQCwAQAhX0AAtAEAIXUBALABACF2AQCwAQAhdwEAsAEAIXgBANwBACF5BACzAQAhegQAswEAIXsEALMBACF8AgDEAQAhfQQAswEAIX4EALMBACF_AgDEAQAhgAECAMQBACGBASAA3QEAIRAHAADfAQAgVAEAsAEAIV9AALQBACF1AQCwAQAhdgEAsAEAIXcBALABACF4AQDcAQAheQQAswEAIXoEALMBACF7BACzAQAhfAIAxAEAIX0EALMBACF-BACzAQAhfwIAxAEAIYABAgDEAQAhgQEgAN0BACEDAAAAFAAgFQAAmwIAIBYAAKMCACAJAAAAFAAgBwAA_QEAIA4AAKMCACBUAQCwAQAhX0AAtAEAIXRAALQBACGFAQEAsAEAIYYBAQCwAQAhhwEBALABACEHBwAA_QEAIFQBALABACFfQAC0AQAhdEAAtAEAIYUBAQCwAQAhhgEBALABACGHAQEAsAEAIRAEAAD1AQAgVAEAAAABX0AAAAABdQEAAAABdgEAAAABdwEAAAABeAEAAAABeQQAAAABegQAAAABewQAAAABfAIAAAABfQQAAAABfgQAAAABfwIAAAABgAECAAAAAYEBIAAAAAECAAAAKgAgFQAApAIAIAcEAACQAgAgVAEAAAABX0AAAAABdEAAAAABhQEBAAAAAYYBAQAAAAGHAQEAAAABAgAAAAEAIBUAAKYCACAQAwAA1AEAIAYAANUBACBUAQAAAAFWAQAAAAFXAQAAAAFZAAAAWQJdBAAAAAFfQAAAAAFsAAAAbAJuAAAAbgJvBAAAAAFwBAAAAAFxBAAAAAFyAgAAAAFzAgAAAAF0QAAAAAECAAAABQAgFQAAqAIAIAMAAAAtACAVAACkAgAgFgAArAIAIBIAAAAtACAEAADeAQAgDgAArAIAIFQBALABACFfQAC0AQAhdQEAsAEAIXYBALABACF3AQCwAQAheAEA3AEAIXkEALMBACF6BACzAQAhewQAswEAIXwCAMQBACF9BACzAQAhfgQAswEAIX8CAMQBACGAAQIAxAEAIYEBIADdAQAhEAQAAN4BACBUAQCwAQAhX0AAtAEAIXUBALABACF2AQCwAQAhdwEAsAEAIXgBANwBACF5BACzAQAhegQAswEAIXsEALMBACF8AgDEAQAhfQQAswEAIX4EALMBACF_AgDEAQAhgAECAMQBACGBASAA3QEAIQMAAAAUACAVAACmAgAgFgAArwIAIAkAAAAUACAEAAD8AQAgDgAArwIAIFQBALABACFfQAC0AQAhdEAAtAEAIYUBAQCwAQAhhgEBALABACGHAQEAsAEAIQcEAAD8AQAgVAEAsAEAIV9AALQBACF0QAC0AQAhhQEBALABACGGAQEAsAEAIYcBAQCwAQAhAwAAAAMAIBUAAKgCACAWAACyAgAgEgAAAAMAIAMAAMUBACAGAADGAQAgDgAAsgIAIFQBALABACFWAQCwAQAhVwEAsAEAIVkAALEBWSJdBADDAQAhX0AAtAEAIWwAAMEBbCJuAADCAW4ibwQAswEAIXAEALMBACFxBACzAQAhcgIAxAEAIXMCAMQBACF0QAC0AQAhEAMAAMUBACAGAADGAQAgVAEAsAEAIVYBALABACFXAQCwAQAhWQAAsQFZIl0EAMMBACFfQAC0AQAhbAAAwQFsIm4AAMIBbiJvBACzAQAhcAQAswEAIXEEALMBACFyAgDEAQAhcwIAxAEAIXRAALQBACEDBAYCBxAECAAHBAMAAQYAAwcOBAgABgMEBwIHCwQIAAUDAwABBQACBgADAgQMAAcNAAEHDwACBBEABxIAAAAAAwgADBsADRwADgAAAAMIAAwbAA0cAA4AAAUIABMbABYcABctABQuABUAAAAAAAUIABMbABYcABctABQuABUCAwABBgADAgMAAQYAAwUIABwbAB8cACAtAB0uAB4AAAAAAAUIABwbAB8cACAtAB0uAB4DAwABBQACBgADAwMAAQUAAgYAAwUIACUbACgcACktACYuACcAAAAAAAUIACUbACgcACktACYuACcJAgEKEwELFgEMFwENGAEPGgEQHAgRHQkSHwETIQgUIgoXIwEYJAEZJQgdKAseKQ8fKwMgLAMhLwMiMAMjMQMkMwMlNQgmNhAnOAMoOggpOxEqPAMrPQMsPggvQRIwQhgxQwIyRAIzRQI0RgI1RwI2SQI3Swg4TBk5TgI6UAg7URo8UgI9UwI-VAg_VxtAWCFBWQRCWgRDWwREXARFXQRGXwRHYQhIYiJJZARKZghLZyNMaARNaQROaghPbSRQbio"
     };
     config.compilerWasm = {
       getRuntime: async () => require_query_compiler_fast_bg(),
@@ -6657,1043 +6840,10 @@ var client_exports = {};
 __export(client_exports, {
   prisma: () => prisma
 });
-
-// ../../node_modules/.bun/@prisma+debug@7.8.0/node_modules/@prisma/debug/dist/index.mjs
-var __defProp2 = Object.defineProperty;
-var __export2 = (target, all) => {
-  for (var name2 in all)
-    __defProp2(target, name2, { get: all[name2], enumerable: true });
-};
-var colors_exports = {};
-__export2(colors_exports, {
-  $: () => $,
-  bgBlack: () => bgBlack,
-  bgBlue: () => bgBlue,
-  bgCyan: () => bgCyan,
-  bgGreen: () => bgGreen,
-  bgMagenta: () => bgMagenta,
-  bgRed: () => bgRed,
-  bgWhite: () => bgWhite,
-  bgYellow: () => bgYellow,
-  black: () => black,
-  blue: () => blue,
-  bold: () => bold,
-  cyan: () => cyan,
-  dim: () => dim,
-  gray: () => gray,
-  green: () => green,
-  grey: () => grey,
-  hidden: () => hidden,
-  inverse: () => inverse,
-  italic: () => italic,
-  magenta: () => magenta,
-  red: () => red,
-  reset: () => reset,
-  strikethrough: () => strikethrough,
-  underline: () => underline,
-  white: () => white,
-  yellow: () => yellow
-});
-var FORCE_COLOR;
-var NODE_DISABLE_COLORS;
-var NO_COLOR;
-var TERM;
-var isTTY = true;
-if (typeof process !== "undefined") {
-  ({ FORCE_COLOR, NODE_DISABLE_COLORS, NO_COLOR, TERM } = process.env || {});
-  isTTY = process.stdout && process.stdout.isTTY;
-}
-var $ = {
-  enabled: !NODE_DISABLE_COLORS && NO_COLOR == null && TERM !== "dumb" && (FORCE_COLOR != null && FORCE_COLOR !== "0" || isTTY)
-};
-function init(x, y) {
-  let rgx = new RegExp(`\\x1b\\[${y}m`, "g");
-  let open = `\x1B[${x}m`, close = `\x1B[${y}m`;
-  return function(txt) {
-    if (!$.enabled || txt == null) return txt;
-    return open + (!!~("" + txt).indexOf(close) ? txt.replace(rgx, close + open) : txt) + close;
-  };
-}
-var reset = init(0, 0);
-var bold = init(1, 22);
-var dim = init(2, 22);
-var italic = init(3, 23);
-var underline = init(4, 24);
-var inverse = init(7, 27);
-var hidden = init(8, 28);
-var strikethrough = init(9, 29);
-var black = init(30, 39);
-var red = init(31, 39);
-var green = init(32, 39);
-var yellow = init(33, 39);
-var blue = init(34, 39);
-var magenta = init(35, 39);
-var cyan = init(36, 39);
-var white = init(37, 39);
-var gray = init(90, 39);
-var grey = init(90, 39);
-var bgBlack = init(40, 49);
-var bgRed = init(41, 49);
-var bgGreen = init(42, 49);
-var bgYellow = init(43, 49);
-var bgBlue = init(44, 49);
-var bgMagenta = init(45, 49);
-var bgCyan = init(46, 49);
-var bgWhite = init(47, 49);
-var MAX_ARGS_HISTORY = 100;
-var COLORS = ["green", "yellow", "blue", "magenta", "cyan", "red"];
-var argsHistory = [];
-var lastTimestamp = Date.now();
-var lastColor = 0;
-var processEnv = typeof process !== "undefined" ? process.env : {};
-globalThis.DEBUG ??= processEnv.DEBUG ?? "";
-globalThis.DEBUG_COLORS ??= processEnv.DEBUG_COLORS ? processEnv.DEBUG_COLORS === "true" : true;
-var topProps = {
-  enable(namespace) {
-    if (typeof namespace === "string") {
-      globalThis.DEBUG = namespace;
-    }
-  },
-  disable() {
-    const prev = globalThis.DEBUG;
-    globalThis.DEBUG = "";
-    return prev;
-  },
-  // this is the core logic to check if logging should happen or not
-  enabled(namespace) {
-    const listenedNamespaces = globalThis.DEBUG.split(",").map((s) => {
-      return s.replace(/[.+?^${}()|[\]\\]/g, "\\$&");
-    });
-    const isListened = listenedNamespaces.some((listenedNamespace) => {
-      if (listenedNamespace === "" || listenedNamespace[0] === "-") return false;
-      return namespace.match(RegExp(listenedNamespace.split("*").join(".*") + "$"));
-    });
-    const isExcluded = listenedNamespaces.some((listenedNamespace) => {
-      if (listenedNamespace === "" || listenedNamespace[0] !== "-") return false;
-      return namespace.match(RegExp(listenedNamespace.slice(1).split("*").join(".*") + "$"));
-    });
-    return isListened && !isExcluded;
-  },
-  log: (...args) => {
-    const [namespace, format, ...rest] = args;
-    const logWithFormatting = console.warn ?? console.log;
-    logWithFormatting(`${namespace} ${format}`, ...rest);
-  },
-  formatters: {}
-  // not implemented
-};
-function debugCreate(namespace) {
-  const instanceProps = {
-    color: COLORS[lastColor++ % COLORS.length],
-    enabled: topProps.enabled(namespace),
-    namespace,
-    log: topProps.log,
-    extend: () => {
-    }
-    // not implemented
-  };
-  const debugCall = (...args) => {
-    const { enabled, namespace: namespace2, color, log } = instanceProps;
-    if (args.length !== 0) {
-      argsHistory.push([namespace2, ...args]);
-    }
-    if (argsHistory.length > MAX_ARGS_HISTORY) {
-      argsHistory.shift();
-    }
-    if (topProps.enabled(namespace2) || enabled) {
-      const stringArgs = args.map((arg) => {
-        if (typeof arg === "string") {
-          return arg;
-        }
-        return safeStringify(arg);
-      });
-      const ms = `+${Date.now() - lastTimestamp}ms`;
-      lastTimestamp = Date.now();
-      if (globalThis.DEBUG_COLORS) {
-        log(colors_exports[color](bold(namespace2)), ...stringArgs, colors_exports[color](ms));
-      } else {
-        log(namespace2, ...stringArgs, ms);
-      }
-    }
-  };
-  return new Proxy(debugCall, {
-    get: (_, prop) => instanceProps[prop],
-    set: (_, prop, value) => instanceProps[prop] = value
-  });
-}
-var Debug2 = new Proxy(debugCreate, {
-  get: (_, prop) => topProps[prop],
-  set: (_, prop, value) => topProps[prop] = value
-});
-function safeStringify(value, indent = 2) {
-  const cache = /* @__PURE__ */ new Set();
-  return JSON.stringify(
-    value,
-    (key, value2) => {
-      if (typeof value2 === "object" && value2 !== null) {
-        if (cache.has(value2)) {
-          return `[Circular *]`;
-        }
-        cache.add(value2);
-      } else if (typeof value2 === "bigint") {
-        return value2.toString();
-      }
-      return value2;
-    },
-    indent
-  );
-}
-
-// ../../node_modules/.bun/@prisma+driver-adapter-utils@7.8.0/node_modules/@prisma/driver-adapter-utils/dist/index.mjs
-var DriverAdapterError = class extends Error {
-  name = "DriverAdapterError";
-  cause;
-  constructor(payload) {
-    super(typeof payload["message"] === "string" ? payload["message"] : payload.kind);
-    this.cause = payload;
-  }
-};
-var debug = Debug2("driver-adapter-utils");
-var ColumnTypeEnum = {
-  // Scalars
-  Int32: 0,
-  Int64: 1,
-  Float: 2,
-  Double: 3,
-  Numeric: 4,
-  Boolean: 5,
-  Character: 6,
-  Text: 7,
-  Date: 8,
-  Time: 9,
-  DateTime: 10,
-  Json: 11,
-  Enum: 12,
-  Bytes: 13,
-  Set: 14,
-  Uuid: 15,
-  // Arrays
-  Int32Array: 64,
-  Int64Array: 65,
-  FloatArray: 66,
-  DoubleArray: 67,
-  NumericArray: 68,
-  BooleanArray: 69,
-  CharacterArray: 70,
-  TextArray: 71,
-  DateArray: 72,
-  TimeArray: 73,
-  DateTimeArray: 74,
-  JsonArray: 75,
-  EnumArray: 76,
-  BytesArray: 77,
-  UuidArray: 78,
-  // Custom
-  UnknownNumber: 128
-};
-var mockAdapterErrors = {
-  queryRaw: new Error("Not implemented: queryRaw"),
-  executeRaw: new Error("Not implemented: executeRaw"),
-  startTransaction: new Error("Not implemented: startTransaction"),
-  executeScript: new Error("Not implemented: executeScript"),
-  dispose: new Error("Not implemented: dispose")
-};
-
-// ../../node_modules/.bun/@prisma+adapter-pg@7.8.0/node_modules/@prisma/adapter-pg/dist/index.mjs
-var import_pg = __toESM(require("pg"), 1);
-var import_pg2 = __toESM(require("pg"), 1);
-var import_postgres_array = __toESM(require_postgres_array(), 1);
-var name = "@prisma/adapter-pg";
-var FIRST_NORMAL_OBJECT_ID = 16384;
-var { types } = import_pg2.default;
-var { builtins: ScalarColumnType, getTypeParser } = types;
-var AdditionalScalarColumnType = {
-  NAME: 19
-};
-var ArrayColumnType = {
-  BIT_ARRAY: 1561,
-  BOOL_ARRAY: 1e3,
-  BYTEA_ARRAY: 1001,
-  BPCHAR_ARRAY: 1014,
-  CHAR_ARRAY: 1002,
-  CIDR_ARRAY: 651,
-  DATE_ARRAY: 1182,
-  FLOAT4_ARRAY: 1021,
-  FLOAT8_ARRAY: 1022,
-  INET_ARRAY: 1041,
-  INT2_ARRAY: 1005,
-  INT4_ARRAY: 1007,
-  INT8_ARRAY: 1016,
-  JSONB_ARRAY: 3807,
-  JSON_ARRAY: 199,
-  MONEY_ARRAY: 791,
-  NUMERIC_ARRAY: 1231,
-  OID_ARRAY: 1028,
-  TEXT_ARRAY: 1009,
-  TIMESTAMP_ARRAY: 1115,
-  TIMESTAMPTZ_ARRAY: 1185,
-  TIME_ARRAY: 1183,
-  UUID_ARRAY: 2951,
-  VARBIT_ARRAY: 1563,
-  VARCHAR_ARRAY: 1015,
-  XML_ARRAY: 143
-};
-var UnsupportedNativeDataType = class _UnsupportedNativeDataType extends Error {
-  // map of type codes to type names
-  static typeNames = {
-    16: "bool",
-    17: "bytea",
-    18: "char",
-    19: "name",
-    20: "int8",
-    21: "int2",
-    22: "int2vector",
-    23: "int4",
-    24: "regproc",
-    25: "text",
-    26: "oid",
-    27: "tid",
-    28: "xid",
-    29: "cid",
-    30: "oidvector",
-    32: "pg_ddl_command",
-    71: "pg_type",
-    75: "pg_attribute",
-    81: "pg_proc",
-    83: "pg_class",
-    114: "json",
-    142: "xml",
-    194: "pg_node_tree",
-    269: "table_am_handler",
-    325: "index_am_handler",
-    600: "point",
-    601: "lseg",
-    602: "path",
-    603: "box",
-    604: "polygon",
-    628: "line",
-    650: "cidr",
-    700: "float4",
-    701: "float8",
-    705: "unknown",
-    718: "circle",
-    774: "macaddr8",
-    790: "money",
-    829: "macaddr",
-    869: "inet",
-    1033: "aclitem",
-    1042: "bpchar",
-    1043: "varchar",
-    1082: "date",
-    1083: "time",
-    1114: "timestamp",
-    1184: "timestamptz",
-    1186: "interval",
-    1266: "timetz",
-    1560: "bit",
-    1562: "varbit",
-    1700: "numeric",
-    1790: "refcursor",
-    2202: "regprocedure",
-    2203: "regoper",
-    2204: "regoperator",
-    2205: "regclass",
-    2206: "regtype",
-    2249: "record",
-    2275: "cstring",
-    2276: "any",
-    2277: "anyarray",
-    2278: "void",
-    2279: "trigger",
-    2280: "language_handler",
-    2281: "internal",
-    2283: "anyelement",
-    2287: "_record",
-    2776: "anynonarray",
-    2950: "uuid",
-    2970: "txid_snapshot",
-    3115: "fdw_handler",
-    3220: "pg_lsn",
-    3310: "tsm_handler",
-    3361: "pg_ndistinct",
-    3402: "pg_dependencies",
-    3500: "anyenum",
-    3614: "tsvector",
-    3615: "tsquery",
-    3642: "gtsvector",
-    3734: "regconfig",
-    3769: "regdictionary",
-    3802: "jsonb",
-    3831: "anyrange",
-    3838: "event_trigger",
-    3904: "int4range",
-    3906: "numrange",
-    3908: "tsrange",
-    3910: "tstzrange",
-    3912: "daterange",
-    3926: "int8range",
-    4072: "jsonpath",
-    4089: "regnamespace",
-    4096: "regrole",
-    4191: "regcollation",
-    4451: "int4multirange",
-    4532: "nummultirange",
-    4533: "tsmultirange",
-    4534: "tstzmultirange",
-    4535: "datemultirange",
-    4536: "int8multirange",
-    4537: "anymultirange",
-    4538: "anycompatiblemultirange",
-    4600: "pg_brin_bloom_summary",
-    4601: "pg_brin_minmax_multi_summary",
-    5017: "pg_mcv_list",
-    5038: "pg_snapshot",
-    5069: "xid8",
-    5077: "anycompatible",
-    5078: "anycompatiblearray",
-    5079: "anycompatiblenonarray",
-    5080: "anycompatiblerange"
-  };
-  type;
-  constructor(code) {
-    super();
-    this.type = _UnsupportedNativeDataType.typeNames[code] || "Unknown";
-    this.message = `Unsupported column type ${this.type}`;
-  }
-};
-function fieldToColumnType(fieldTypeId) {
-  switch (fieldTypeId) {
-    case ScalarColumnType.INT2:
-    case ScalarColumnType.INT4:
-      return ColumnTypeEnum.Int32;
-    case ScalarColumnType.INT8:
-      return ColumnTypeEnum.Int64;
-    case ScalarColumnType.FLOAT4:
-      return ColumnTypeEnum.Float;
-    case ScalarColumnType.FLOAT8:
-      return ColumnTypeEnum.Double;
-    case ScalarColumnType.BOOL:
-      return ColumnTypeEnum.Boolean;
-    case ScalarColumnType.DATE:
-      return ColumnTypeEnum.Date;
-    case ScalarColumnType.TIME:
-    case ScalarColumnType.TIMETZ:
-      return ColumnTypeEnum.Time;
-    case ScalarColumnType.TIMESTAMP:
-    case ScalarColumnType.TIMESTAMPTZ:
-      return ColumnTypeEnum.DateTime;
-    case ScalarColumnType.NUMERIC:
-    case ScalarColumnType.MONEY:
-      return ColumnTypeEnum.Numeric;
-    case ScalarColumnType.JSON:
-    case ScalarColumnType.JSONB:
-      return ColumnTypeEnum.Json;
-    case ScalarColumnType.UUID:
-      return ColumnTypeEnum.Uuid;
-    case ScalarColumnType.OID:
-      return ColumnTypeEnum.Int64;
-    case ScalarColumnType.BPCHAR:
-    case ScalarColumnType.TEXT:
-    case ScalarColumnType.VARCHAR:
-    case ScalarColumnType.BIT:
-    case ScalarColumnType.VARBIT:
-    case ScalarColumnType.INET:
-    case ScalarColumnType.CIDR:
-    case ScalarColumnType.XML:
-    case AdditionalScalarColumnType.NAME:
-      return ColumnTypeEnum.Text;
-    case ScalarColumnType.BYTEA:
-      return ColumnTypeEnum.Bytes;
-    case ArrayColumnType.INT2_ARRAY:
-    case ArrayColumnType.INT4_ARRAY:
-      return ColumnTypeEnum.Int32Array;
-    case ArrayColumnType.FLOAT4_ARRAY:
-      return ColumnTypeEnum.FloatArray;
-    case ArrayColumnType.FLOAT8_ARRAY:
-      return ColumnTypeEnum.DoubleArray;
-    case ArrayColumnType.NUMERIC_ARRAY:
-    case ArrayColumnType.MONEY_ARRAY:
-      return ColumnTypeEnum.NumericArray;
-    case ArrayColumnType.BOOL_ARRAY:
-      return ColumnTypeEnum.BooleanArray;
-    case ArrayColumnType.CHAR_ARRAY:
-      return ColumnTypeEnum.CharacterArray;
-    case ArrayColumnType.BPCHAR_ARRAY:
-    case ArrayColumnType.TEXT_ARRAY:
-    case ArrayColumnType.VARCHAR_ARRAY:
-    case ArrayColumnType.VARBIT_ARRAY:
-    case ArrayColumnType.BIT_ARRAY:
-    case ArrayColumnType.INET_ARRAY:
-    case ArrayColumnType.CIDR_ARRAY:
-    case ArrayColumnType.XML_ARRAY:
-      return ColumnTypeEnum.TextArray;
-    case ArrayColumnType.DATE_ARRAY:
-      return ColumnTypeEnum.DateArray;
-    case ArrayColumnType.TIME_ARRAY:
-      return ColumnTypeEnum.TimeArray;
-    case ArrayColumnType.TIMESTAMP_ARRAY:
-      return ColumnTypeEnum.DateTimeArray;
-    case ArrayColumnType.TIMESTAMPTZ_ARRAY:
-      return ColumnTypeEnum.DateTimeArray;
-    case ArrayColumnType.JSON_ARRAY:
-    case ArrayColumnType.JSONB_ARRAY:
-      return ColumnTypeEnum.JsonArray;
-    case ArrayColumnType.BYTEA_ARRAY:
-      return ColumnTypeEnum.BytesArray;
-    case ArrayColumnType.UUID_ARRAY:
-      return ColumnTypeEnum.UuidArray;
-    case ArrayColumnType.INT8_ARRAY:
-    case ArrayColumnType.OID_ARRAY:
-      return ColumnTypeEnum.Int64Array;
-    default:
-      if (fieldTypeId >= FIRST_NORMAL_OBJECT_ID) {
-        return ColumnTypeEnum.Text;
-      }
-      throw new UnsupportedNativeDataType(fieldTypeId);
-  }
-}
-function normalize_array(element_normalizer) {
-  return (str) => (0, import_postgres_array.parse)(str, element_normalizer);
-}
-function normalize_numeric(numeric) {
-  return numeric;
-}
-function normalize_date(date) {
-  return date;
-}
-function normalize_timestamp(time) {
-  return `${time.replace(" ", "T")}+00:00`;
-}
-function normalize_timestamptz(time) {
-  return time.replace(" ", "T").replace(/[+-]\d{2}(:\d{2})?$/, "+00:00");
-}
-function normalize_time(time) {
-  return time;
-}
-function normalize_timez(time) {
-  return time.replace(/[+-]\d{2}(:\d{2})?$/, "");
-}
-function normalize_money(money) {
-  return money.slice(1);
-}
-function normalize_xml(xml) {
-  return xml;
-}
-function toJson(json) {
-  return json;
-}
-var parsePgBytes = getTypeParser(ScalarColumnType.BYTEA);
-var normalizeByteaArray = getTypeParser(ArrayColumnType.BYTEA_ARRAY);
-function convertBytes(serializedBytes) {
-  return parsePgBytes(serializedBytes);
-}
-function normalizeBit(bit) {
-  return bit;
-}
-var customParsers = {
-  [ScalarColumnType.NUMERIC]: normalize_numeric,
-  [ArrayColumnType.NUMERIC_ARRAY]: normalize_array(normalize_numeric),
-  [ScalarColumnType.TIME]: normalize_time,
-  [ArrayColumnType.TIME_ARRAY]: normalize_array(normalize_time),
-  [ScalarColumnType.TIMETZ]: normalize_timez,
-  [ScalarColumnType.DATE]: normalize_date,
-  [ArrayColumnType.DATE_ARRAY]: normalize_array(normalize_date),
-  [ScalarColumnType.TIMESTAMP]: normalize_timestamp,
-  [ArrayColumnType.TIMESTAMP_ARRAY]: normalize_array(normalize_timestamp),
-  [ScalarColumnType.TIMESTAMPTZ]: normalize_timestamptz,
-  [ArrayColumnType.TIMESTAMPTZ_ARRAY]: normalize_array(normalize_timestamptz),
-  [ScalarColumnType.MONEY]: normalize_money,
-  [ArrayColumnType.MONEY_ARRAY]: normalize_array(normalize_money),
-  [ScalarColumnType.JSON]: toJson,
-  [ArrayColumnType.JSON_ARRAY]: normalize_array(toJson),
-  [ScalarColumnType.JSONB]: toJson,
-  [ArrayColumnType.JSONB_ARRAY]: normalize_array(toJson),
-  [ScalarColumnType.BYTEA]: convertBytes,
-  [ArrayColumnType.BYTEA_ARRAY]: normalizeByteaArray,
-  [ArrayColumnType.BIT_ARRAY]: normalize_array(normalizeBit),
-  [ArrayColumnType.VARBIT_ARRAY]: normalize_array(normalizeBit),
-  [ArrayColumnType.XML_ARRAY]: normalize_array(normalize_xml)
-};
-function mapArg(arg, argType) {
-  if (arg === null) {
-    return null;
-  }
-  if (Array.isArray(arg) && argType.arity === "list") {
-    return arg.map((value) => mapArg(value, argType));
-  }
-  if (typeof arg === "string" && argType.scalarType === "datetime") {
-    arg = new Date(arg);
-  }
-  if (arg instanceof Date) {
-    switch (argType.dbType) {
-      case "TIME":
-      case "TIMETZ":
-        return formatTime(arg);
-      case "DATE":
-        return formatDate(arg);
-      default:
-        return formatDateTime(arg);
-    }
-  }
-  if (typeof arg === "string" && argType.scalarType === "bytes") {
-    return Buffer.from(arg, "base64");
-  }
-  if (ArrayBuffer.isView(arg)) {
-    return new Uint8Array(arg.buffer, arg.byteOffset, arg.byteLength);
-  }
-  return arg;
-}
-function formatDateTime(date) {
-  const pad = (n, z = 2) => String(n).padStart(z, "0");
-  const ms = date.getUTCMilliseconds();
-  return pad(date.getUTCFullYear(), 4) + "-" + pad(date.getUTCMonth() + 1) + "-" + pad(date.getUTCDate()) + " " + pad(date.getUTCHours()) + ":" + pad(date.getUTCMinutes()) + ":" + pad(date.getUTCSeconds()) + (ms ? "." + String(ms).padStart(3, "0") : "");
-}
-function formatDate(date) {
-  const pad = (n, z = 2) => String(n).padStart(z, "0");
-  return pad(date.getUTCFullYear(), 4) + "-" + pad(date.getUTCMonth() + 1) + "-" + pad(date.getUTCDate());
-}
-function formatTime(date) {
-  const pad = (n, z = 2) => String(n).padStart(z, "0");
-  const ms = date.getUTCMilliseconds();
-  return pad(date.getUTCHours()) + ":" + pad(date.getUTCMinutes()) + ":" + pad(date.getUTCSeconds()) + (ms ? "." + String(ms).padStart(3, "0") : "");
-}
-var TLS_ERRORS = /* @__PURE__ */ new Set([
-  "UNABLE_TO_GET_ISSUER_CERT",
-  "UNABLE_TO_GET_CRL",
-  "UNABLE_TO_DECRYPT_CERT_SIGNATURE",
-  "UNABLE_TO_DECRYPT_CRL_SIGNATURE",
-  "UNABLE_TO_DECODE_ISSUER_PUBLIC_KEY",
-  "CERT_SIGNATURE_FAILURE",
-  "CRL_SIGNATURE_FAILURE",
-  "CERT_NOT_YET_VALID",
-  "CERT_HAS_EXPIRED",
-  "CRL_NOT_YET_VALID",
-  "CRL_HAS_EXPIRED",
-  "ERROR_IN_CERT_NOT_BEFORE_FIELD",
-  "ERROR_IN_CERT_NOT_AFTER_FIELD",
-  "ERROR_IN_CRL_LAST_UPDATE_FIELD",
-  "ERROR_IN_CRL_NEXT_UPDATE_FIELD",
-  "DEPTH_ZERO_SELF_SIGNED_CERT",
-  "SELF_SIGNED_CERT_IN_CHAIN",
-  "UNABLE_TO_GET_ISSUER_CERT_LOCALLY",
-  "UNABLE_TO_VERIFY_LEAF_SIGNATURE",
-  "CERT_CHAIN_TOO_LONG",
-  "CERT_REVOKED",
-  "INVALID_CA",
-  "INVALID_PURPOSE",
-  "CERT_UNTRUSTED",
-  "CERT_REJECTED",
-  "HOSTNAME_MISMATCH",
-  "ERR_TLS_CERT_ALTNAME_FORMAT",
-  "ERR_TLS_CERT_ALTNAME_INVALID"
-]);
-var SOCKET_ERRORS = /* @__PURE__ */ new Set(["ENOTFOUND", "ECONNREFUSED", "ECONNRESET", "ETIMEDOUT"]);
-function convertDriverError(error) {
-  if (isSocketError(error)) {
-    return mapSocketError(error);
-  }
-  if (isTlsError(error)) {
-    return {
-      kind: "TlsConnectionError",
-      reason: error.message
-    };
-  }
-  if (isDriverError(error)) {
-    return {
-      originalCode: error.code,
-      originalMessage: error.message,
-      ...mapDriverError(error)
-    };
-  }
-  throw error;
-}
-function mapDriverError(error) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
-  switch (error.code) {
-    case "22001":
-      return {
-        kind: "LengthMismatch",
-        column: error.column
-      };
-    case "22003":
-      return {
-        kind: "ValueOutOfRange",
-        cause: error.message
-      };
-    case "22P02":
-      return {
-        kind: "InvalidInputValue",
-        message: error.message
-      };
-    case "23505": {
-      const fields = (_c = (_b = (_a = error.detail) == null ? void 0 : _a.match(/Key \(([^)]+)\)/)) == null ? void 0 : _b.at(1)) == null ? void 0 : _c.split(", ");
-      return {
-        kind: "UniqueConstraintViolation",
-        constraint: fields !== void 0 ? { fields } : void 0
-      };
-    }
-    case "23502": {
-      const fields = (_f = (_e = (_d = error.detail) == null ? void 0 : _d.match(/Key \(([^)]+)\)/)) == null ? void 0 : _e.at(1)) == null ? void 0 : _f.split(", ");
-      return {
-        kind: "NullConstraintViolation",
-        constraint: fields !== void 0 ? { fields } : void 0
-      };
-    }
-    case "23503": {
-      let constraint;
-      if (error.column) {
-        constraint = { fields: [error.column] };
-      } else if (error.constraint) {
-        constraint = { index: error.constraint };
-      }
-      return {
-        kind: "ForeignKeyConstraintViolation",
-        constraint
-      };
-    }
-    case "3D000":
-      return {
-        kind: "DatabaseDoesNotExist",
-        db: (_g = error.message.split(" ").at(1)) == null ? void 0 : _g.split('"').at(1)
-      };
-    case "28000":
-      return {
-        kind: "DatabaseAccessDenied",
-        db: (_h = error.message.split(",").find((s) => s.startsWith(" database"))) == null ? void 0 : _h.split('"').at(1)
-      };
-    case "28P01":
-      return {
-        kind: "AuthenticationFailed",
-        user: (_i = error.message.split(" ").pop()) == null ? void 0 : _i.split('"').at(1)
-      };
-    case "40001":
-      return {
-        kind: "TransactionWriteConflict"
-      };
-    case "42P01":
-      return {
-        kind: "TableDoesNotExist",
-        table: (_j = error.message.split(" ").at(1)) == null ? void 0 : _j.split('"').at(1)
-      };
-    case "42703": {
-      const rawColumn = (_k = error.message.match(/^column (.+) does not exist$/)) == null ? void 0 : _k.at(1);
-      return {
-        kind: "ColumnNotFound",
-        column: rawColumn == null ? void 0 : rawColumn.replace(/"((?:""|[^"])*)"/g, (_, id) => id.replaceAll('""', '"'))
-      };
-    }
-    case "42P04":
-      return {
-        kind: "DatabaseAlreadyExists",
-        db: (_l = error.message.split(" ").at(1)) == null ? void 0 : _l.split('"').at(1)
-      };
-    case "53300":
-      return {
-        kind: "TooManyConnections",
-        cause: error.message
-      };
-    default:
-      return {
-        kind: "postgres",
-        code: error.code ?? "N/A",
-        severity: error.severity ?? "N/A",
-        message: error.message,
-        detail: error.detail,
-        column: error.column,
-        hint: error.hint
-      };
-  }
-}
-function isDriverError(error) {
-  return typeof error.code === "string" && typeof error.message === "string" && typeof error.severity === "string" && (typeof error.detail === "string" || error.detail === void 0) && (typeof error.column === "string" || error.column === void 0) && (typeof error.hint === "string" || error.hint === void 0);
-}
-function mapSocketError(error) {
-  switch (error.code) {
-    case "ENOTFOUND":
-    case "ECONNREFUSED":
-      return {
-        kind: "DatabaseNotReachable",
-        host: error.address ?? error.hostname,
-        port: error.port
-      };
-    case "ECONNRESET":
-      return {
-        kind: "ConnectionClosed"
-      };
-    case "ETIMEDOUT":
-      return {
-        kind: "SocketTimeout"
-      };
-  }
-}
-function isSocketError(error) {
-  return typeof error.code === "string" && typeof error.syscall === "string" && typeof error.errno === "number" && SOCKET_ERRORS.has(error.code);
-}
-function isTlsError(error) {
-  if (typeof error.code === "string") {
-    return TLS_ERRORS.has(error.code);
-  }
-  switch (error.message) {
-    case "The server does not support SSL connections":
-    case "There was an error establishing an SSL connection":
-      return true;
-  }
-  return false;
-}
-var types2 = import_pg.default.types;
-var debug2 = Debug2("prisma:driver-adapter:pg");
-var PgQueryable = class {
-  constructor(client, pgOptions) {
-    this.client = client;
-    this.pgOptions = pgOptions;
-  }
-  provider = "postgres";
-  adapterName = name;
-  /**
-   * Execute a query given as SQL, interpolating the given parameters.
-   */
-  async queryRaw(query) {
-    var _a;
-    const tag = "[js::query_raw]";
-    debug2(`${tag} %O`, query);
-    const { fields, rows } = await this.performIO(query);
-    const columnNames = fields.map((field) => field.name);
-    let columnTypes = [];
-    try {
-      columnTypes = fields.map((field) => fieldToColumnType(field.dataTypeID));
-    } catch (e) {
-      if (e instanceof UnsupportedNativeDataType) {
-        throw new DriverAdapterError({
-          kind: "UnsupportedNativeDataType",
-          type: e.type
-        });
-      }
-      throw e;
-    }
-    const udtParser = (_a = this.pgOptions) == null ? void 0 : _a.userDefinedTypeParser;
-    if (udtParser) {
-      for (let i = 0; i < fields.length; i++) {
-        const field = fields[i];
-        if (field.dataTypeID >= FIRST_NORMAL_OBJECT_ID && !Object.hasOwn(customParsers, field.dataTypeID)) {
-          for (let j = 0; j < rows.length; j++) {
-            rows[j][i] = await udtParser(field.dataTypeID, rows[j][i], this);
-          }
-        }
-      }
-    }
-    return {
-      columnNames,
-      columnTypes,
-      rows
-    };
-  }
-  /**
-   * Execute a query given as SQL, interpolating the given parameters and
-   * returning the number of affected rows.
-   * Note: Queryable expects a u64, but napi.rs only supports u32.
-   */
-  async executeRaw(query) {
-    const tag = "[js::execute_raw]";
-    debug2(`${tag} %O`, query);
-    return (await this.performIO(query)).rowCount ?? 0;
-  }
-  /**
-   * Run a query against the database, returning the result set.
-   * Should the query fail due to a connection error, the connection is
-   * marked as unhealthy.
-   */
-  async performIO(query) {
-    var _a, _b;
-    const { sql, args } = query;
-    const values = args.map((arg, i) => mapArg(arg, query.argTypes[i]));
-    try {
-      const result = await this.client.query(
-        {
-          name: (_b = (_a = this.pgOptions) == null ? void 0 : _a.statementNameGenerator) == null ? void 0 : _b.call(_a, query),
-          text: sql,
-          values,
-          rowMode: "array",
-          types: {
-            getTypeParser: (oid, format) => {
-              if (format === "text" && customParsers[oid]) {
-                return customParsers[oid];
-              }
-              return types2.getTypeParser(oid, format);
-            }
-          }
-        },
-        values
-      );
-      return result;
-    } catch (e) {
-      this.onError(e);
-    }
-  }
-  onError(error) {
-    debug2("Error in performIO: %O", error);
-    throw new DriverAdapterError(convertDriverError(error));
-  }
-};
-var PgTransaction = class extends PgQueryable {
-  constructor(client, options, pgOptions, cleanup) {
-    super(client, pgOptions);
-    this.options = options;
-    this.pgOptions = pgOptions;
-    this.cleanup = cleanup;
-  }
-  async commit() {
-    var _a;
-    debug2(`[js::commit]`);
-    (_a = this.cleanup) == null ? void 0 : _a.call(this);
-    this.client.release();
-  }
-  async rollback() {
-    var _a;
-    debug2(`[js::rollback]`);
-    (_a = this.cleanup) == null ? void 0 : _a.call(this);
-    this.client.release();
-  }
-  async createSavepoint(name2) {
-    await this.executeRaw({ sql: `SAVEPOINT ${name2}`, args: [], argTypes: [] });
-  }
-  async rollbackToSavepoint(name2) {
-    await this.executeRaw({ sql: `ROLLBACK TO SAVEPOINT ${name2}`, args: [], argTypes: [] });
-  }
-  async releaseSavepoint(name2) {
-    await this.executeRaw({ sql: `RELEASE SAVEPOINT ${name2}`, args: [], argTypes: [] });
-  }
-};
-var PrismaPgAdapter = class extends PgQueryable {
-  constructor(client, pgOptions, release) {
-    super(client);
-    this.pgOptions = pgOptions;
-    this.release = release;
-  }
-  async startTransaction(isolationLevel) {
-    const options = {
-      usePhantomQuery: false
-    };
-    const tag = "[js::startTransaction]";
-    debug2("%s options: %O", tag, options);
-    const conn = await this.client.connect().catch((error) => this.onError(error));
-    const onError = (err) => {
-      var _a, _b;
-      debug2(`Error from pool connection: ${err.message} %O`, err);
-      (_b = (_a = this.pgOptions) == null ? void 0 : _a.onConnectionError) == null ? void 0 : _b.call(_a, err);
-    };
-    conn.on("error", onError);
-    const cleanup = () => {
-      conn.removeListener("error", onError);
-    };
-    try {
-      const tx = new PgTransaction(conn, options, this.pgOptions, cleanup);
-      await tx.executeRaw({ sql: "BEGIN", args: [], argTypes: [] });
-      if (isolationLevel) {
-        await tx.executeRaw({
-          sql: `SET TRANSACTION ISOLATION LEVEL ${isolationLevel}`,
-          args: [],
-          argTypes: []
-        });
-      }
-      return tx;
-    } catch (error) {
-      cleanup();
-      conn.release(error);
-      this.onError(error);
-    }
-  }
-  async executeScript(script) {
-    const statements = script.split(";").map((stmt) => stmt.trim()).filter((stmt) => stmt.length > 0);
-    for (const stmt of statements) {
-      try {
-        await this.client.query(stmt);
-      } catch (error) {
-        this.onError(error);
-      }
-    }
-  }
-  getConnectionInfo() {
-    var _a;
-    return {
-      schemaName: (_a = this.pgOptions) == null ? void 0 : _a.schema,
-      supportsRelationJoins: true
-    };
-  }
-  async dispose() {
-    var _a;
-    return (_a = this.release) == null ? void 0 : _a.call(this);
-  }
-  underlyingDriver() {
-    return this.client;
-  }
-};
-var PrismaPgAdapterFactory = class {
-  constructor(poolOrConfig, options) {
-    this.options = options;
-    if (poolOrConfig instanceof import_pg.default.Pool) {
-      this.externalPool = poolOrConfig;
-      this.config = poolOrConfig.options;
-    } else if (typeof poolOrConfig === "string") {
-      this.externalPool = null;
-      this.config = { connectionString: poolOrConfig };
-    } else {
-      this.externalPool = null;
-      this.config = poolOrConfig;
-    }
-  }
-  provider = "postgres";
-  adapterName = name;
-  config;
-  externalPool;
-  async connect() {
-    const client = this.externalPool ?? new import_pg.default.Pool(this.config);
-    const onIdleClientError = (err) => {
-      var _a, _b;
-      debug2(`Error from idle pool client: ${err.message} %O`, err);
-      (_b = (_a = this.options) == null ? void 0 : _a.onPoolError) == null ? void 0 : _b.call(_a, err);
-    };
-    client.on("error", onIdleClientError);
-    return new PrismaPgAdapter(client, this.options, async () => {
-      var _a;
-      if (this.externalPool) {
-        if ((_a = this.options) == null ? void 0 : _a.disposeExternalPool) {
-          await this.externalPool.end();
-          this.externalPool = null;
-        } else {
-          this.externalPool.removeListener("error", onIdleClientError);
-        }
-      } else {
-        await client.end();
-      }
-    });
-  }
-  async connectToShadowDb() {
-    const conn = await this.connect();
-    const database = `prisma_migrate_shadow_db_${globalThis.crypto.randomUUID()}`;
-    await conn.executeScript(`CREATE DATABASE "${database}"`);
-    const client = new import_pg.default.Pool({ ...this.config, database });
-    return new PrismaPgAdapter(client, void 0, async () => {
-      await conn.executeScript(`DROP DATABASE "${database}"`);
-      await client.end();
-    });
-  }
-};
-
-// src/client.ts
-var import_pg3 = require("pg");
 var import_client = __toESM(require_client2());
 __reExport(client_exports, __toESM(require_client2()));
 var globalForPrisma = global;
-var connectionString = process.env.DATABASE_URL;
-var pool = new import_pg3.Pool({
-  connectionString
-});
-var adapter = new PrismaPgAdapterFactory(pool);
-var prisma = globalForPrisma.prisma || new import_client.PrismaClient({
-  adapter
-  // Optional: Log queries to see if connection works
-  // log: ['query', 'info', 'warn', 'error'],
-});
+var prisma = globalForPrisma.prisma || new import_client.PrismaClient();
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
 // src/seed.ts
